@@ -6,7 +6,7 @@ export default function TodoList() {
     const [task, setTask] = useState("");
     const [list, setList] = useState([]);
 
-    const Add = () => {
+    const Add = async () => {
         if (task.trim()) {
             setList([...list, { text: task, completed: false }]);
             // console.log(list, "list");
@@ -15,6 +15,36 @@ export default function TodoList() {
         } else {
             alert("You Not Enter your Task");
         }
+
+
+        // const url = 'https://api.freeapi.app/api/v1/todos?query=reactjs&complete=false';
+        // const options = { method: 'GET', headers: { accept: 'application/json' } };
+
+        // try {
+        //     const response = await fetch(url, options);
+        //     const data = await response.json();
+        //     console.log(data);
+        // } catch (error) {
+        //     console.error(error);
+        // }
+
+
+
+        const url = 'https://api.freeapi.app/api/v1/todos/';
+        const options = {
+            method: 'POST',
+            headers: { accept: 'application/json', 'content-type': 'application/json' },
+            body: '{"description":"Some description about todo which is optional","title":"Contibute ReactJs"}'
+        };
+
+        try {
+            const response = await fetch(url, options);
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error(error);
+        }
+
     };
 
     const toggleComplete = (index) => {
@@ -22,16 +52,27 @@ export default function TodoList() {
         const newList = [...list];
         newList[index].completed = !newList[index].completed;
         // console.log("newList[index].completed",newList[index].completed);
-        
+
         setList(newList);
         // console.log("setList",setList);
 
     };
-    function Delete(indexItem) {
+    async function Delete(indexItem) {
         // console.log("index item",indexItem);      
         const updatedList = [...list];
         updatedList.splice(indexItem, 1);
         setList(updatedList);
+        
+        const url = 'https://api.freeapi.app/api/v1/todos/648e0741aeefd0cfa40adddd';
+        const options = { method: 'DELETE', headers: { accept: 'application/json' } };
+
+        try {
+            const response = await fetch(url, options);
+            const data = await response.json();
+            console.log(data);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     // if (list) {
@@ -63,8 +104,8 @@ export default function TodoList() {
 
                 (<div className="d-flex justify-content-around">
                     <h5>Total Task:{list.length} </h5>
-                     <h5>Pending Task: {list.filter(item => !item.completed).length}</h5>
-                    <h5>Completed Task: {list.filter(item => item.completed).length}</h5>            
+                    <h5>Pending Task: {list.filter(item => !item.completed).length}</h5>
+                    <h5>Completed Task: {list.filter(item => item.completed).length}</h5>
                 </div>
                 )
             }
